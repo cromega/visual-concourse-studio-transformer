@@ -19,7 +19,7 @@ class NodePipeline
   end
 
   def jobs
-    @_jobs ||= @objects.select { |obj| obj["type"] == "function" }
+    @_jobs ||= @objects.select { |obj| obj["type"] == "job" }
   end
 
   def inputs_of(job_id)
@@ -108,7 +108,7 @@ pipeline["resources"] = generate_resources(node_pipeline.resources)
 node_pipeline.jobs.each do |job|
   inputs = node_pipeline.inputs_of(job["id"])
   outputs = node_pipeline.outputs_of(job["id"])
-  job_meta = JSON.parse(job["func"])
+  job_meta = YAML.load(job["task_configuration"])
   links = node_pipeline.dependencies_of(job["id"])
 
   job_obj = {"name" => job["name"]}
