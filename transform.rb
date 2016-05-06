@@ -62,7 +62,7 @@ def generate_plan(inputs, job, outputs, links)
     plan << res
   end
 
-  (job["tasks"] || []).each_pair do |name, file|
+  (job["tasks"] || {}).each_pair do |name, file|
     plan << {
      "task" => name,
      "file" => file
