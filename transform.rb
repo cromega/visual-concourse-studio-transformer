@@ -36,11 +36,9 @@ class NodePipeline
     inputs = inputs_of(job_id)
     jobs.each do |job|
       links = job["wires"].flatten & inputs.map { |input| input["id"] }
-      if links.any?
-        links.each do |link|
-          dependent_input = inputs.find { |input| input["id"] == link }
-          deps[dependent_input["name"]] = [job["name"]]
-        end
+      links.each do |link|
+        dependent_input = inputs.find { |input| input["id"] == link }
+        deps[dependent_input["name"]] = [job["name"]]
       end
     end
 
