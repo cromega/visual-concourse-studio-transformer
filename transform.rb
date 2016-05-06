@@ -58,7 +58,7 @@ def generate_plan(inputs, job, outputs, links)
       res["passed"] = links[input["name"]]
       res["trigger"] = true
     end
-    res["params"] = job[name]["get"] if job[name]
+    res["params"] = job[name]["get"] if job[name] && job[name]["get"]
     plan << res
   end
 
@@ -72,7 +72,7 @@ def generate_plan(inputs, job, outputs, links)
   outputs.each do |output|
     name = output["name"]
     res = {"put" => name}
-    res["params"] = job[name]["put"] if job[name]
+    res["params"] = job[name]["put"] if job[name] && job[name]["put"]
     plan << res
   end
 
