@@ -22,11 +22,11 @@ class NodePipeline
     @_jobs ||= @objects.select { |obj| obj["type"] == "function" }
   end
 
-  def inputs_of_job(job_id)
+  def inputs_of(job_id)
     resources.select { |obj| obj["wires"].flatten.include? job_id }
   end
 
-  def outputs_of_job(job_id)
+  def outputs_of(job_id)
     job = jobs.find { |job| job["id"] == job_id }
     resources.select { |obj| job["wires"].flatten.include? obj["id"] }
   end
@@ -88,8 +88,8 @@ pipeline = {"resources" => [], "jobs" => []}
 pipeline["resources"] = generate_resources(node_pipeline.resources)
 
 node_pipeline.jobs.each do |job|
-  inputs = node_pipeline.inputs_of_job(job["id"])
-  outputs = node_pipeline.outputs_of_job(job["id"])
+  inputs = node_pipeline.inputs_of(job["id"])
+  outputs = node_pipeline.outputs_of(job["id"])
   job_meta = JSON.parse(job["func"])
 
   job_obj = {"name" => job["name"]}
