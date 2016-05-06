@@ -4,18 +4,16 @@ require "yaml"
 RESOURCE_ATTRIBUTE_LOOKUP = {
   "git" => %w(uri branch private_key),
   "s3" => %w(access_key_id secret_access_key region_name endpoint bucket regexp),
-  "http request" => %w(method url)
+  "resource" => %w(method url)
 }
 
 class NodePipeline
-  RESOURCE_TYPES= ["git", "s3", "http request"]
-
   def initialize(json)
     @objects = JSON.parse(json)
   end
 
   def resources
-    @_resources ||= @objects.select { |obj| RESOURCE_TYPES.include? obj["type"] }
+    @_resources ||= @objects.select { |obj| RESOURCE_ATTRIBUTE_LOOKUP.keys.include? obj["type"] }
   end
 
   def jobs
