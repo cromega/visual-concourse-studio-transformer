@@ -30,14 +30,34 @@ class NodePipeline
     job = jobs.find { |job| job["id"] == job_id }
     resources.select { |obj| job["wires"].flatten.include? obj["id"] }
   end
+
+  def dependencies_of(job_id)
+    deps = {}
+    inputs = inputs_of(job_id)
+    jobs.each do |job|
+      links = job["wires"].flatten & inputs.map { |input| input["id"] }
+      if links.any?
+        links.each do |link|
+          dependent_input = inputs.find { |input| input["id"] == link }
+          deps[dependent_input["name"]] = [job["name"]]
+        end
+      end
+    end
+
+    deps
+  end
 end
 
-def generate_plan(inputs, job, outputs)
+def generate_plan(inputs, job, outputs, links)
   plan = []
 
   inputs.each do |input|
     name = input["name"]
     res = {"get" => name}
+    if links[input["name"]]
+      res["passed"] = links[input["name"]]
+      res["trigger"] = true
+    end
     res["params"] = job[name]["get"] if job[name]
     plan << res
   end
@@ -91,9 +111,10 @@ node_pipeline.jobs.each do |job|
   inputs = node_pipeline.inputs_of(job["id"])
   outputs = node_pipeline.outputs_of(job["id"])
   job_meta = JSON.parse(job["func"])
+  links = node_pipeline.dependencies_of(job["id"])
 
   job_obj = {"name" => job["name"]}
-  job_obj["plan"] = generate_plan(inputs, job_meta, outputs)
+  job_obj["plan"] = generate_plan(inputs, job_meta, outputs, links)
   pipeline["jobs"] << job_obj
 end
 
