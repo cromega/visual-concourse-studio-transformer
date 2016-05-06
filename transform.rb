@@ -8,7 +8,7 @@ RESOURCE_ATTRIBUTE_LOOKUP = {
 }
 
 class NodePipeline
-  RESOURCE_TYPES= ["http request"]
+  RESOURCE_TYPES= ["git", "s3", "http request"]
 
   def initialize(json)
     @objects = JSON.parse(json)
