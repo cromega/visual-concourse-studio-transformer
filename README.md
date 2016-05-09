@@ -44,6 +44,8 @@ someresource:
 1. lots of missing attribute extraction all over the place
 2. Job configuration handling is very basic
 3. most likely broken dependency lookup
+4. No trigger config
+5. No way of specifying a resource once and then plugging it into various jobs. node-red just doesn't work that way.
 
 
 
